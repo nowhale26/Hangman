@@ -1,11 +1,11 @@
 package backend.academy;
 
 import lombok.Getter;
-
+@Getter
 public class Word {
-    @Getter private String word;
-    @Getter private String hint;
-    @Getter private int difficulty;
+     private String word;
+     private String hint;
+     private int difficulty;
 
     public Word(String word, String hint, int difficulty){
         this.word=word;
