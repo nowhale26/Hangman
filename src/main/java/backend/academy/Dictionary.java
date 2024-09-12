@@ -1,7 +1,10 @@
 package backend.academy;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 public class Dictionary {
-    public static final int SIZE = 15;
     public static final Word[] FRUITS = new Word[] {
         new Word("Банан", "Любят обезьяны", 1),
         new Word("Киви", "Птица с таким же именем", 1),
@@ -51,7 +54,7 @@ public class Dictionary {
         new Word("Спагетти", "Итальянская еда", 3),
         new Word("Буррито", "Мексиканская еда", 3),
         new Word("Рататуй", "Есть такой мультфильм", 3),
-        new Word("Шакшука", "Из томатов и яиц", 3)
+        new Word("Шакшука", "Блюдо из томатов и яиц", 3)
     };
     public static final Word[] COUNTRIES = new Word[] {
         new Word("Россия", "Самая большая страна в мире", 1),
@@ -71,5 +74,32 @@ public class Dictionary {
         new Word("Коста Рика", "Страна в средней Америке", 3)
     };
 
+    public String getWordOfSelectedDifficulty(String category, int difficulty){
+        List<Word> wordsOfSelectedDifficulty = new ArrayList<>();
+        Word[] selectedCategoryWords;
+        //Выбираем нужную категорию слов
+        switch (category){
+            case "Фрукты":
+                selectedCategoryWords = FRUITS.clone();
+            case "Животные":
+                selectedCategoryWords = ANIMALS.clone();
+            case "Страны":
+                selectedCategoryWords = COUNTRIES.clone();
+            case "Еда":
+                selectedCategoryWords = FOOD.clone();
+            default:
+                selectedCategoryWords = COUNTRIES.clone();
+        }
+        //Выбираем слова нужной сложности
+        for(Word word : selectedCategoryWords){
+            if(word.difficulty() == difficulty){
+                wordsOfSelectedDifficulty.add(word);
+            }
+        }
+        //Выбираем случайное слово этой сложности и категории
+        Random random = new Random();
+        Word randomWord = wordsOfSelectedDifficulty.get(random.nextInt(0,wordsOfSelectedDifficulty.size()));
+        return randomWord.word();
+    }
 
 }

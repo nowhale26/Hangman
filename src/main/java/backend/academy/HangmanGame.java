@@ -1,0 +1,79 @@
+package backend.academy;
+
+import lombok.Getter;
+import lombok.Setter;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.util.Random;
+
+@Getter
+@Setter
+public class HangmanGame {
+    private int difficulty;
+    private String category;
+
+    public void startGame() {
+    }
+
+    ;
+
+    public void getStartParams(InputStream input, OutputStream output) throws IOException {
+        PrintWriter writer = new PrintWriter(new OutputStreamWriter(output), true);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+
+        // Выбор категории
+        writer.println("Выберите одну из категорий слов: Фрукты, Животные, Страны, Еда");
+        String categoryInput = reader.readLine();
+        // Генерация случайной категории
+        if (categoryInput == null || categoryInput.isBlank()) {
+            Random random = new Random();
+            int randomCategory = random.nextInt(1, 5);
+            switch (randomCategory) {
+                case 1:
+                    category = "Фрукты";
+                    break;
+                case 2:
+                    category = "Животные";
+                    break;
+                case 3:
+                    category = "Страны";
+                    break;
+                case 4:
+                    category = "Еда";
+                    break;
+            }
+        } else {
+            category = categoryInput;
+        }
+
+        // Выбор сложности
+        writer.println("Выберите одну из сложностей: Легкая, Средняя, Сложная");
+        String difficultyInput = reader.readLine();
+        // Генерация случайной сложности от 1 до 3
+        if (difficultyInput == null || difficultyInput.isBlank()) {
+            Random random = new Random();
+            difficulty = random.nextInt(1, 4);
+        } else {
+            switch (difficultyInput) {
+                case "Легкая":
+                    difficulty = 1;
+                    break;
+                case "Средняя":
+                    difficulty = 2;
+                    break;
+                case "Сложная":
+                    difficulty = 3;
+                    break;
+            }
+        }
+    }
+
+    ;
+
+
+}
