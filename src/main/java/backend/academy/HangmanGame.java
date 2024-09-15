@@ -14,13 +14,14 @@ import lombok.Setter;
 @Getter
 @Setter
 public class HangmanGame {
+    private static final int ALLOWED_MISTAKES = 6;
     private int difficulty;
     private String category;
     private String hiddenWord;
+    private String currentHiddenWord = "";
 
     public void startGame() {
     }
-
 
     public void getStartParams(InputStream input, OutputStream output) throws IOException {
         PrintWriter writer = new PrintWriter(new OutputStreamWriter(output), true);
@@ -73,10 +74,20 @@ public class HangmanGame {
         }
     }
 
-
-    public void setHiddenWord(){
+    public void setHiddenWord() {
         Dict dict = new Dict();
 
-        hiddenWord = dict.getWordOfSelectedDifficulty(category,difficulty);
+        hiddenWord = dict.getWordOfSelectedDifficulty(category, difficulty);
     }
+
+    public void underscoreHiddenWord() {
+        for (int i = 0; i < hiddenWord.length(); i++) {
+            if (hiddenWord.charAt(i) != ' ') {
+                currentHiddenWord += '_';
+            } else {
+                currentHiddenWord += ' ';
+            }
+        }
+    }
+
 }

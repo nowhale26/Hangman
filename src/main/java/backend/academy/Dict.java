@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 public class Dict {
+    public static final String ALPHABET = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
     public static final Word[] FRUITS = new Word[] {
         new Word("Банан", "Любят обезьяны", 1),
         new Word("Киви", "Птица с таким же именем", 1),
@@ -74,11 +75,11 @@ public class Dict {
         new Word("Коста Рика", "Страна в средней Америке", 3)
     };
 
-    public String getWordOfSelectedDifficulty(String category, int difficulty){
+    public String getWordOfSelectedDifficulty(String category, int difficulty) {
         List<Word> wordsOfSelectedDifficulty = new ArrayList<>();
         Word[] selectedCategoryWords;
         //Выбираем нужную категорию слов
-        switch (category){
+        switch (category) {
             case "Фрукты":
                 selectedCategoryWords = FRUITS.clone();
                 break;
@@ -95,14 +96,14 @@ public class Dict {
                 selectedCategoryWords = COUNTRIES.clone();
         }
         //Выбираем слова нужной сложности
-        for(Word word : selectedCategoryWords){
-            if(word.getDifficulty() == difficulty){
+        for (Word word : selectedCategoryWords) {
+            if (word.getDifficulty() == difficulty) {
                 wordsOfSelectedDifficulty.add(word);
             }
         }
         //Выбираем случайное слово этой сложности и категории
         Random random = new Random();
-        Word randomWord = wordsOfSelectedDifficulty.get(random.nextInt(0,wordsOfSelectedDifficulty.size()));
+        Word randomWord = wordsOfSelectedDifficulty.get(random.nextInt(0, wordsOfSelectedDifficulty.size()));
         return randomWord.getWord();
     }
 
