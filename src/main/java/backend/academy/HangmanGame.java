@@ -1,7 +1,5 @@
 package backend.academy;
 
-import lombok.Getter;
-import lombok.Setter;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,17 +8,19 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.Random;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
 public class HangmanGame {
     private int difficulty;
     private String category;
+    private String hiddenWord;
 
     public void startGame() {
     }
 
-    ;
 
     public void getStartParams(InputStream input, OutputStream output) throws IOException {
         PrintWriter writer = new PrintWriter(new OutputStreamWriter(output), true);
@@ -73,7 +73,10 @@ public class HangmanGame {
         }
     }
 
-    ;
 
+    public void setHiddenWord(){
+        Dict dict = new Dict();
 
+        hiddenWord = dict.getWordOfSelectedDifficulty(category,difficulty);
+    }
 }

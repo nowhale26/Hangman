@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Dictionary {
+public class Dict {
     public static final Word[] FRUITS = new Word[] {
         new Word("Банан", "Любят обезьяны", 1),
         new Word("Киви", "Птица с таким же именем", 1),
@@ -81,25 +81,29 @@ public class Dictionary {
         switch (category){
             case "Фрукты":
                 selectedCategoryWords = FRUITS.clone();
+                break;
             case "Животные":
                 selectedCategoryWords = ANIMALS.clone();
+                break;
             case "Страны":
                 selectedCategoryWords = COUNTRIES.clone();
+                break;
             case "Еда":
                 selectedCategoryWords = FOOD.clone();
+                break;
             default:
                 selectedCategoryWords = COUNTRIES.clone();
         }
         //Выбираем слова нужной сложности
         for(Word word : selectedCategoryWords){
-            if(word.difficulty() == difficulty){
+            if(word.getDifficulty() == difficulty){
                 wordsOfSelectedDifficulty.add(word);
             }
         }
         //Выбираем случайное слово этой сложности и категории
         Random random = new Random();
         Word randomWord = wordsOfSelectedDifficulty.get(random.nextInt(0,wordsOfSelectedDifficulty.size()));
-        return randomWord.word();
+        return randomWord.getWord();
     }
 
 }
