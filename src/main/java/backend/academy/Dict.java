@@ -75,7 +75,7 @@ public class Dict {
         new Word("Коста Рика", "Страна в средней Америке", 3)
     };
 
-    public String getWordOfSelectedDifficulty(String category, int difficulty) {
+    public Word getWordOfSelectedDifficulty(String category, int difficulty) {
         List<Word> wordsOfSelectedDifficulty = new ArrayList<>();
         Word[] selectedCategoryWords;
         //Выбираем нужную категорию слов
@@ -103,8 +103,16 @@ public class Dict {
         }
         //Выбираем случайное слово этой сложности и категории
         Random random = new Random();
-        Word randomWord = wordsOfSelectedDifficulty.get(random.nextInt(0, wordsOfSelectedDifficulty.size()));
-        return randomWord.getWord();
+        return wordsOfSelectedDifficulty.get(random.nextInt(0, wordsOfSelectedDifficulty.size()));
+    }
+
+    public Letter[] initializeAlphabet() {
+        Letter[] currentAlphabet = new Letter[ALPHABET.length()];
+        for (int i = 0; i < ALPHABET.length(); i++) {
+            currentAlphabet[i].setLetter(ALPHABET.charAt(i));
+            currentAlphabet[i].setUsed(false);
+        }
+        return currentAlphabet;
     }
 
 }

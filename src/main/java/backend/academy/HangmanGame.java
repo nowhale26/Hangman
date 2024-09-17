@@ -17,7 +17,7 @@ public class HangmanGame {
     private static final int ALLOWED_MISTAKES = 6;
     private int difficulty;
     private String category;
-    private String hiddenWord;
+    private Word hiddenWord;
     private String currentHiddenWord = "";
 
     public void startGame() {
@@ -81,13 +81,51 @@ public class HangmanGame {
     }
 
     public void underscoreHiddenWord() {
-        for (int i = 0; i < hiddenWord.length(); i++) {
-            if (hiddenWord.charAt(i) != ' ') {
+        for (int i = 0; i < hiddenWord.getWord().length(); i++) {
+            if (hiddenWord.getWord().charAt(i) != ' ') {
                 currentHiddenWord += '_';
             } else {
                 currentHiddenWord += ' ';
             }
         }
+    }
+
+    public void startGuessing(InputStream input, OutputStream output) throws IOException {
+        int currentMistakes = 0;
+        Dict dict = new Dict();
+        PrintWriter writer = new PrintWriter(new OutputStreamWriter(output), true);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+        underscoreHiddenWord();
+        Letter[] currentAlphabet = dict.initializeAlphabet();
+        while (currentMistakes != ALLOWED_MISTAKES) {
+            writer.println(HangmanStageVisualization.STAGES[currentMistakes]);
+            writer.println(currentHiddenWord);
+            if (currentMistakes == 5) {
+                writer.println("Подсказка: " + hiddenWord.getHint());
+            }
+            writer.println("Введите 1 букву из алфавита:");
+            writer.println(printAlphabet(currentAlphabet));
+            char guessedLetter = (char) reader.read();
+            guessedLetter = Character.toLowerCase(guessedLetter);
+            currentAlphabet[guessedLetter - 'а'].setUsed(true);
+            if (hiddenWord.getWord().contains(Character.toString(guessedLetter))) {
+
+            }
+        }
+    }
+
+    public String printAlphabet(Letter[] currentAlphabet) {
+        String printedAlphabet = "";
+        for (int i = 0; i < currentAlphabet.length; i++) {
+            if (!currentAlphabet[i].isUsed()) {
+                printedAlphabet += currentAlphabet[i].getLetter() + " ";
+            }
+        }
+        return printedAlphabet;
+    }
+
+    public void updateCurrentHiddenWord() {
+
     }
 
 }
