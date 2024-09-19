@@ -78,18 +78,19 @@ public class Dict {
     public Word getWordOfSelectedDifficulty(String category, int difficulty) {
         List<Word> wordsOfSelectedDifficulty = new ArrayList<>();
         Word[] selectedCategoryWords;
+        category = category.toLowerCase();
         //Выбираем нужную категорию слов
         switch (category) {
-            case "Фрукты":
+            case "фрукты":
                 selectedCategoryWords = FRUITS.clone();
                 break;
-            case "Животные":
+            case "животные":
                 selectedCategoryWords = ANIMALS.clone();
                 break;
-            case "Страны":
+            case "страны":
                 selectedCategoryWords = COUNTRIES.clone();
                 break;
-            case "Еда":
+            case "еда":
                 selectedCategoryWords = FOOD.clone();
                 break;
             default:
@@ -109,8 +110,8 @@ public class Dict {
     public Letter[] initializeAlphabet() {
         Letter[] currentAlphabet = new Letter[ALPHABET.length()];
         for (int i = 0; i < ALPHABET.length(); i++) {
-            Letter letter = new Letter(ALPHABET.charAt(i),false);
-            currentAlphabet[i]=letter;
+            Letter letter = new Letter(ALPHABET.charAt(i), false);
+            currentAlphabet[i] = letter;
         }
         return currentAlphabet;
     }

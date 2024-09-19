@@ -30,50 +30,62 @@ public class HangmanGame {
     public void getStartParams(InputStream input, OutputStream output) throws IOException {
         PrintWriter writer = new PrintWriter(new OutputStreamWriter(output), true);
         BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+        Random random = new Random();
 
-        // Выбор категории
-        writer.println("Выберите одну из категорий слов: Фрукты, Животные, Страны, Еда");
-        String categoryInput = reader.readLine();
-        // Генерация случайной категории
-        if (categoryInput == null || categoryInput.isBlank()) {
-            Random random = new Random();
-            int randomCategory = random.nextInt(1, 5);
-            switch (randomCategory) {
-                case 1:
-                    category = "Фрукты";
-                    break;
-                case 2:
-                    category = "Животные";
-                    break;
-                case 3:
-                    category = "Страны";
-                    break;
-                case 4:
-                    category = "Еда";
-                    break;
+        // Проверка ввода категории
+        while (true) {
+            writer.println(
+                "Выберите одну из категорий слов: Фрукты, Животные, Страны, Еда (или оставьте пустым для случайного выбора)");
+            String categoryInput = reader.readLine();
+
+            if (categoryInput == null || categoryInput.isBlank()) {
+                int randomCategory = random.nextInt(1, 5);
+                switch (randomCategory) {
+                    case 1:
+                        category = "Фрукты";
+                        break;
+                    case 2:
+                        category = "Животные";
+                        break;
+                    case 3:
+                        category = "Страны";
+                        break;
+                    case 4:
+                        category = "Еда";
+                        break;
+                }
+                break;
+            } else if (categoryInput.equalsIgnoreCase("Фрукты") ||
+                categoryInput.equalsIgnoreCase("Животные") ||
+                categoryInput.equalsIgnoreCase("Страны") ||
+                categoryInput.equalsIgnoreCase("Еда")) {
+                category = categoryInput;
+                break;
+            } else {
+                writer.println("Неверная категория. Попробуйте снова.");
             }
-        } else {
-            category = categoryInput;
         }
 
-        // Выбор сложности
-        writer.println("Выберите одну из сложностей: Легкая, Средняя, Сложная");
-        String difficultyInput = reader.readLine();
-        // Генерация случайной сложности от 1 до 3
-        if (difficultyInput == null || difficultyInput.isBlank()) {
-            Random random = new Random();
-            difficulty = random.nextInt(1, 4);
-        } else {
-            switch (difficultyInput) {
-                case "Легкая":
-                    difficulty = 1;
-                    break;
-                case "Средняя":
-                    difficulty = 2;
-                    break;
-                case "Сложная":
-                    difficulty = 3;
-                    break;
+        // Проверка ввода сложности
+        while (true) {
+            writer.println(
+                "Выберите одну из сложностей: Легкая, Средняя, Сложная (или оставьте пустым для случайного выбора)");
+            String difficultyInput = reader.readLine();
+
+            if (difficultyInput == null || difficultyInput.isBlank()) {
+                difficulty = random.nextInt(1, 4);
+                break;
+            } else if (difficultyInput.equalsIgnoreCase("Легкая")) {
+                difficulty = 1;
+                break;
+            } else if (difficultyInput.equalsIgnoreCase("Средняя")) {
+                difficulty = 2;
+                break;
+            } else if (difficultyInput.equalsIgnoreCase("Сложная")) {
+                difficulty = 3;
+                break;
+            } else {
+                writer.println("Неверная сложность. Попробуйте снова.");
             }
         }
     }
@@ -103,18 +115,36 @@ public class HangmanGame {
         underscoreHiddenWord();
         Letter[] currentAlphabet = dict.initializeAlphabet();
         writer.println("У вас " + ALLOWED_MISTAKES + " допустимых ошибок");
+
         while (currentMistakes != ALLOWED_MISTAKES && lettersToGuess > 0) {
             writer.println("Количество оставшихся попыток: " + (ALLOWED_MISTAKES - currentMistakes));
             writer.println(HangmanStageVisualization.STAGES[currentMistakes]);
             writer.println(currentHiddenWord);
+
             if (currentMistakes == 5) {
                 writer.println("Подсказка: " + hiddenWord.getHint());
             }
-            writer.println("Введите 1 букву из алфавита:");
-            writer.println(printAlphabet(currentAlphabet));
-            char guessedLetter = (char) reader.read();
-            reader.readLine(); // Обнуление символа новой строки
-            guessedLetter = Character.toLowerCase(guessedLetter);
+
+            // Проверка ввода буквы
+            char guessedLetter;
+            while (true) {
+                writer.println("Введите 1 букву из алфавита:");
+                writer.println(printAlphabet(currentAlphabet));
+                String inputLine = reader.readLine().trim();
+
+                if (inputLine.length() == 1 && Character.isLetter(inputLine.charAt(0))) {
+                    guessedLetter = Character.toLowerCase(inputLine.charAt(0));
+                    if ((guessedLetter >= 'а' && guessedLetter <= 'я') || guessedLetter == 'ё') {
+                        break;
+                    } else {
+                        writer.println("Неверная буква. Попробуйте снова.");
+                    }
+                } else {
+                    writer.println("Пожалуйста, введите только одну букву.");
+                }
+            }
+
+            // Отмечаем букву как использованную
             if (guessedLetter <= 'е') {
                 currentAlphabet[guessedLetter - 'а'].setUsed(true);
             } else if (guessedLetter == 'ё') {
@@ -122,13 +152,14 @@ public class HangmanGame {
             } else {
                 currentAlphabet[guessedLetter - 'а' + 1].setUsed(true);
             }
-
+            //Проверка правильности угаданной буквы
             if (hiddenWord.getWord().contains(Character.toString(guessedLetter))) {
                 updateCurrentHiddenWord(guessedLetter);
             } else {
                 currentMistakes++;
             }
         }
+
         if (lettersToGuess == 0) {
             writer.println(currentHiddenWord);
             writer.println("Поздравляем, вы полностью отгадали слово!");
