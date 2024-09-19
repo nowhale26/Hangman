@@ -19,8 +19,12 @@ public class HangmanGame {
     private String category;
     private Word hiddenWord;
     private String currentHiddenWord = "";
+    private int lettersToGuess;
 
-    public void startGame() {
+    public void startGame() throws IOException {
+        getStartParams(System.in, System.out);
+        setHiddenWord();
+        startGuessing(System.in, System.out);
     }
 
     public void getStartParams(InputStream input, OutputStream output) throws IOException {
@@ -84,6 +88,7 @@ public class HangmanGame {
         for (int i = 0; i < hiddenWord.getWord().length(); i++) {
             if (hiddenWord.getWord().charAt(i) != ' ') {
                 currentHiddenWord += '_';
+                lettersToGuess++;
             } else {
                 currentHiddenWord += ' ';
             }
@@ -97,7 +102,9 @@ public class HangmanGame {
         BufferedReader reader = new BufferedReader(new InputStreamReader(input));
         underscoreHiddenWord();
         Letter[] currentAlphabet = dict.initializeAlphabet();
-        while (currentMistakes != ALLOWED_MISTAKES) {
+        writer.println("У вас " + ALLOWED_MISTAKES + " допустимых ошибок");
+        while (currentMistakes != ALLOWED_MISTAKES && lettersToGuess > 0) {
+            writer.println("Количество оставшихся попыток: " + (ALLOWED_MISTAKES - currentMistakes));
             writer.println(HangmanStageVisualization.STAGES[currentMistakes]);
             writer.println(currentHiddenWord);
             if (currentMistakes == 5) {
@@ -106,11 +113,28 @@ public class HangmanGame {
             writer.println("Введите 1 букву из алфавита:");
             writer.println(printAlphabet(currentAlphabet));
             char guessedLetter = (char) reader.read();
+            reader.readLine(); // Обнуление символа новой строки
             guessedLetter = Character.toLowerCase(guessedLetter);
-            currentAlphabet[guessedLetter - 'а'].setUsed(true);
-            if (hiddenWord.getWord().contains(Character.toString(guessedLetter))) {
-
+            if (guessedLetter <= 'е') {
+                currentAlphabet[guessedLetter - 'а'].setUsed(true);
+            } else if (guessedLetter == 'ё') {
+                currentAlphabet[6].setUsed(true);
+            } else {
+                currentAlphabet[guessedLetter - 'а' + 1].setUsed(true);
             }
+
+            if (hiddenWord.getWord().contains(Character.toString(guessedLetter))) {
+                updateCurrentHiddenWord(guessedLetter);
+            } else {
+                currentMistakes++;
+            }
+        }
+        if (lettersToGuess == 0) {
+            writer.println(currentHiddenWord);
+            writer.println("Поздравляем, вы полностью отгадали слово!");
+        } else {
+            writer.println(HangmanStageVisualization.STAGES[ALLOWED_MISTAKES]);
+            writer.println("К сожалению, вы не отгадали слово");
         }
     }
 
@@ -124,8 +148,15 @@ public class HangmanGame {
         return printedAlphabet;
     }
 
-    public void updateCurrentHiddenWord() {
-
+    public void updateCurrentHiddenWord(char guessedLetter) {
+        for (int i = 0; i < hiddenWord.getWord().length(); i++) {
+            if (hiddenWord.getWord().charAt(i) == guessedLetter) {
+                StringBuilder sb = new StringBuilder(currentHiddenWord);
+                sb.setCharAt(i, guessedLetter);
+                currentHiddenWord = sb.toString();
+                lettersToGuess--;
+            }
+        }
     }
 
 }
