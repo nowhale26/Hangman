@@ -38,31 +38,11 @@ public class HangmanGame {
                 "Выберите одну из категорий слов: Фрукты, Животные, Страны, Еда (или оставьте пустым для случайного выбора)");
             String categoryInput = reader.readLine();
 
-            if (categoryInput == null || categoryInput.isBlank()) {
-                int randomCategory = random.nextInt(1, 5);
-                switch (randomCategory) {
-                    case 1:
-                        category = "Фрукты";
-                        break;
-                    case 2:
-                        category = "Животные";
-                        break;
-                    case 3:
-                        category = "Страны";
-                        break;
-                    case 4:
-                        category = "Еда";
-                        break;
-                }
-                break;
-            } else if (categoryInput.equalsIgnoreCase("Фрукты") ||
-                categoryInput.equalsIgnoreCase("Животные") ||
-                categoryInput.equalsIgnoreCase("Страны") ||
-                categoryInput.equalsIgnoreCase("Еда")) {
-                category = categoryInput;
-                break;
+            category = chooseCategory(categoryInput);
+            if (category.equals(" ")) {
+                writer.println("Неверная категория, попробуйте снова");
             } else {
-                writer.println("Неверная категория. Попробуйте снова.");
+                break;
             }
         }
 
@@ -72,20 +52,11 @@ public class HangmanGame {
                 "Выберите одну из сложностей: Легкая, Средняя, Сложная (или оставьте пустым для случайного выбора)");
             String difficultyInput = reader.readLine();
 
-            if (difficultyInput == null || difficultyInput.isBlank()) {
-                difficulty = random.nextInt(1, 4);
-                break;
-            } else if (difficultyInput.equalsIgnoreCase("Легкая")) {
-                difficulty = 1;
-                break;
-            } else if (difficultyInput.equalsIgnoreCase("Средняя")) {
-                difficulty = 2;
-                break;
-            } else if (difficultyInput.equalsIgnoreCase("Сложная")) {
-                difficulty = 3;
-                break;
-            } else {
+            difficulty = chooseDifficulty(difficultyInput);
+            if (difficulty == 0) {
                 writer.println("Неверная сложность. Попробуйте снова.");
+            } else {
+                break;
             }
         }
     }
@@ -190,4 +161,42 @@ public class HangmanGame {
         }
     }
 
+    public String chooseCategory(String categoryInput) {
+        if (categoryInput == null || categoryInput.isBlank()) {
+            Random random = new Random();
+            int randomCategory = random.nextInt(1, 5);
+            switch (randomCategory) {
+                case 1:
+                    return "Фрукты";
+                case 2:
+                    return "Животные";
+                case 3:
+                    return "Страны";
+                case 4:
+                    return "Еда";
+            }
+        } else if (categoryInput.equalsIgnoreCase("Фрукты") ||
+            categoryInput.equalsIgnoreCase("Животные") ||
+            categoryInput.equalsIgnoreCase("Страны") ||
+            categoryInput.equalsIgnoreCase("Еда")) {
+            return categoryInput;
+        } else {
+            return " ";
+        }
+        return " ";
+    }
+
+    public int chooseDifficulty(String difficultyInput) {
+        if (difficultyInput == null || difficultyInput.isBlank()) {
+            Random random = new Random();
+            return random.nextInt(1, 4);
+        } else if (difficultyInput.equalsIgnoreCase("Легкая")) {
+            return 1;
+        } else if (difficultyInput.equalsIgnoreCase("Средняя")) {
+            return 2;
+        } else if (difficultyInput.equalsIgnoreCase("Сложная")) {
+            return 3;
+        }
+        return 0;
+    }
 }
