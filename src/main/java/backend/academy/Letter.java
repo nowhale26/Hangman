@@ -9,12 +9,12 @@ public class Letter {
     private char letter;
     private boolean isUsed;
 
-    Letter(){
+    Letter() {
 
     }
 
-    public Letter(char letter, boolean isUsed){
-        this.letter=letter;
-        this.isUsed=isUsed;
+    public Letter(char letter, boolean isUsed) {
+        this.letter = letter;
+        this.isUsed = isUsed;
     }
 }

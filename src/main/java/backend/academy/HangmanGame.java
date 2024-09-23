@@ -14,6 +14,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class HangmanGame {
+    private static final String FRUITS = "Фрукты";
+    private static final String ANIMALS = "Животные";
+    private static final String COUNTRIES = "Страны";
+    private static final String FOOD = "Еда";
+    private static final int HINT_STAGE = 5;
+    private static final int YO_INDEX = 6;
     private static final int ALLOWED_MISTAKES = 6;
     private int difficulty;
     private String category;
@@ -35,7 +41,7 @@ public class HangmanGame {
         // Проверка ввода категории
         while (true) {
             writer.println(
-                "Выберите одну из категорий слов: Фрукты, Животные, Страны, Еда (или оставьте пустым для случайного выбора)");
+                "Выберите одну из категорий слов: Фрукты, Животные, Страны, Еда (пустой для случайного выбора)");
             String categoryInput = reader.readLine();
 
             category = chooseCategory(categoryInput);
@@ -68,7 +74,7 @@ public class HangmanGame {
     }
 
     public String underscoreHiddenWord() {
-        String underscoredHiddenWord="";
+        String underscoredHiddenWord = "";
         for (int i = 0; i < hiddenWord.getWord().length(); i++) {
             if (hiddenWord.getWord().charAt(i) != ' ') {
                 underscoredHiddenWord += '_';
@@ -85,7 +91,7 @@ public class HangmanGame {
         Dict dict = new Dict();
         PrintWriter writer = new PrintWriter(new OutputStreamWriter(output), true);
         BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-        currentHiddenWord=underscoreHiddenWord();
+        currentHiddenWord = underscoreHiddenWord();
         Letter[] currentAlphabet = dict.initializeAlphabet();
         writer.println("У вас " + ALLOWED_MISTAKES + " допустимых ошибок");
 
@@ -94,7 +100,7 @@ public class HangmanGame {
             writer.println(HangmanStageVisualization.STAGES[currentMistakes]);
             writer.println(currentHiddenWord);
 
-            if (currentMistakes == 5) {
+            if (currentMistakes == HINT_STAGE) {
                 writer.println("Подсказка: " + hiddenWord.getHint());
             }
 
@@ -121,7 +127,7 @@ public class HangmanGame {
             if (guessedLetter <= 'е') {
                 currentAlphabet[guessedLetter - 'а'].setUsed(true);
             } else if (guessedLetter == 'ё') {
-                currentAlphabet[6].setUsed(true);
+                currentAlphabet[YO_INDEX].setUsed(true);
             } else {
                 currentAlphabet[guessedLetter - 'а' + 1].setUsed(true);
             }
@@ -163,42 +169,52 @@ public class HangmanGame {
         }
     }
 
+    private static final int RANDOM_CATEGORY_BOUND = 5;
+    private static final int FRUITS_CASE = 1;
+    private static final int ANIMALS_CASE = 2;
+    private static final int COUNTRIES_CASE = 3;
+    private static final int FOOD_CASE = 4;
+
     public String chooseCategory(String categoryInput) {
+        String chosenCategory = "";
         if (categoryInput == null || categoryInput.isBlank()) {
             Random random = new Random();
-            int randomCategory = random.nextInt(1, 5);
-            switch (randomCategory) {
-                case 1:
-                    return "Фрукты";
-                case 2:
-                    return "Животные";
-                case 3:
-                    return "Страны";
-                case 4:
-                    return "Еда";
-            }
-        } else if (categoryInput.equalsIgnoreCase("Фрукты") ||
-            categoryInput.equalsIgnoreCase("Животные") ||
-            categoryInput.equalsIgnoreCase("Страны") ||
-            categoryInput.equalsIgnoreCase("Еда")) {
+            int randomCategory = random.nextInt(1, RANDOM_CATEGORY_BOUND);
+            chosenCategory = switch (randomCategory) {
+                case FRUITS_CASE -> FRUITS;
+                case ANIMALS_CASE -> ANIMALS;
+                case COUNTRIES_CASE -> COUNTRIES;
+                case FOOD_CASE -> FOOD;
+                default -> " ";
+            };
+            return chosenCategory;
+        } else if (categoryInput.equalsIgnoreCase(FRUITS)
+            || categoryInput.equalsIgnoreCase(ANIMALS)
+            || categoryInput.equalsIgnoreCase(COUNTRIES)
+            || categoryInput.equalsIgnoreCase(FOOD)) {
             return categoryInput;
         } else {
             return " ";
         }
-        return " ";
     }
 
+    private static final int DIFFICULTY_BOUND = 4;
+    private static final int EASY_DIFFICULTY = 1;
+    private static final int MEDIUM_DIFFICULTY = 2;
+    private static final int HARD_DIFFICULTY = 3;
+
     public int chooseDifficulty(String difficultyInput) {
+        int chosenDufficulty = 0;
         if (difficultyInput == null || difficultyInput.isBlank()) {
             Random random = new Random();
-            return random.nextInt(1, 4);
+            return random.nextInt(1, DIFFICULTY_BOUND);
         } else if (difficultyInput.equalsIgnoreCase("Легкая")) {
-            return 1;
+            chosenDufficulty = EASY_DIFFICULTY;
         } else if (difficultyInput.equalsIgnoreCase("Средняя")) {
-            return 2;
+            chosenDufficulty = MEDIUM_DIFFICULTY;
         } else if (difficultyInput.equalsIgnoreCase("Сложная")) {
-            return 3;
+            chosenDufficulty = HARD_DIFFICULTY;
         }
-        return 0;
+        return chosenDufficulty;
     }
 }

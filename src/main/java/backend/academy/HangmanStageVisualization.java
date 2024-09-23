@@ -1,6 +1,10 @@
 package backend.academy;
 
 public class HangmanStageVisualization {
+    private HangmanStageVisualization() {
+
+    }
+
     public static final String[] STAGES = {
         """
                +---+

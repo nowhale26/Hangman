@@ -78,9 +78,9 @@ public class Dict {
     public Word getWordOfSelectedDifficulty(String category, int difficulty) {
         List<Word> wordsOfSelectedDifficulty = new ArrayList<>();
         Word[] selectedCategoryWords;
-        category = category.toLowerCase();
+        String switchCategory = category.toLowerCase();
         //Выбираем нужную категорию слов
-        switch (category) {
+        switch (switchCategory) {
             case "фрукты":
                 selectedCategoryWords = FRUITS.clone();
                 break;
