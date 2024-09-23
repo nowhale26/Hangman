@@ -11,6 +11,7 @@ public class WordTest {
 
         Dict dict = new Dict();
         var hiddenWord = dict.getWordOfSelectedDifficulty("Фрукты", 1);
+        //Проверяем правильность выбора сложности слова
         Assertions.assertThat(hiddenWord.getDifficulty()).isEqualTo(1);
 
     }

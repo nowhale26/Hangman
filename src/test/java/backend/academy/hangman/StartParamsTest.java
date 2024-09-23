@@ -8,6 +8,7 @@ public class StartParamsTest {
     @Test
     public void checkCategory(){
         HangmanGame hangman = new HangmanGame();
+        //Проверяем правильность выбора категории с разным вводом
         String category=hangman.chooseCategory("Фрукты");
         Assertions.assertThat(category).isEqualTo("Фрукты");
         category=hangman.chooseCategory("akfjdssdkl");
@@ -20,6 +21,7 @@ public class StartParamsTest {
     @Test
     public void checkDifficulty(){
         HangmanGame hangman= new HangmanGame();
+        //Проверяем правильность выбора сложности с разным вводом
         int difficulty= hangman.chooseDifficulty("ЛеГкая");
         Assertions.assertThat(difficulty).isEqualTo(1);
         difficulty= hangman.chooseDifficulty("СЛОЖная");

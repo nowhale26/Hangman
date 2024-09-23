@@ -13,7 +13,7 @@ public class Letter {
 
     }
 
-    Letter(char letter, boolean isUsed){
+    public Letter(char letter, boolean isUsed){
         this.letter=letter;
         this.isUsed=isUsed;
     }

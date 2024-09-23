@@ -67,15 +67,17 @@ public class HangmanGame {
         hiddenWord = dict.getWordOfSelectedDifficulty(category, difficulty);
     }
 
-    public void underscoreHiddenWord() {
+    public String underscoreHiddenWord() {
+        String underscoredHiddenWord="";
         for (int i = 0; i < hiddenWord.getWord().length(); i++) {
             if (hiddenWord.getWord().charAt(i) != ' ') {
-                currentHiddenWord += '_';
+                underscoredHiddenWord += '_';
                 lettersToGuess++;
             } else {
-                currentHiddenWord += ' ';
+                underscoredHiddenWord += ' ';
             }
         }
+        return underscoredHiddenWord;
     }
 
     public void startGuessing(InputStream input, OutputStream output) throws IOException {
@@ -83,7 +85,7 @@ public class HangmanGame {
         Dict dict = new Dict();
         PrintWriter writer = new PrintWriter(new OutputStreamWriter(output), true);
         BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-        underscoreHiddenWord();
+        currentHiddenWord=underscoreHiddenWord();
         Letter[] currentAlphabet = dict.initializeAlphabet();
         writer.println("У вас " + ALLOWED_MISTAKES + " допустимых ошибок");
 
