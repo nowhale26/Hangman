@@ -14,13 +14,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class HangmanGame {
-    private static final String FRUITS = "Фрукты";
-    private static final String ANIMALS = "Животные";
-    private static final String COUNTRIES = "Страны";
-    private static final String FOOD = "Еда";
-    private static final int HINT_STAGE = 5;
-    private static final int YO_INDEX = 6;
-    private static final int ALLOWED_MISTAKES = 6;
     private int difficulty;
     private String category;
     private Word hiddenWord;
@@ -68,9 +61,7 @@ public class HangmanGame {
     }
 
     public void setHiddenWord() {
-        Dict dict = new Dict();
-
-        hiddenWord = dict.getWordOfSelectedDifficulty(category, difficulty);
+        hiddenWord = Dict.getWordOfSelectedDifficulty(category, difficulty);
     }
 
     public String underscoreHiddenWord() {
@@ -88,19 +79,18 @@ public class HangmanGame {
 
     public void startGuessing(InputStream input, OutputStream output) throws IOException {
         int currentMistakes = 0;
-        Dict dict = new Dict();
         PrintWriter writer = new PrintWriter(new OutputStreamWriter(output), true);
         BufferedReader reader = new BufferedReader(new InputStreamReader(input));
         currentHiddenWord = underscoreHiddenWord();
-        Letter[] currentAlphabet = dict.initializeAlphabet();
-        writer.println("У вас " + ALLOWED_MISTAKES + " допустимых ошибок");
+        Letter[] currentAlphabet = Dict.initializeAlphabet();
+        writer.println("У вас " + Constants.ALLOWED_MISTAKES + " допустимых ошибок");
 
-        while (currentMistakes != ALLOWED_MISTAKES && lettersToGuess > 0) {
-            writer.println("Количество оставшихся попыток: " + (ALLOWED_MISTAKES - currentMistakes));
+        while (currentMistakes != Constants.ALLOWED_MISTAKES && lettersToGuess > 0) {
+            writer.println("Количество оставшихся попыток: " + (Constants.ALLOWED_MISTAKES - currentMistakes));
             writer.println(HangmanStageVisualization.STAGES[currentMistakes]);
             writer.println(currentHiddenWord);
 
-            if (currentMistakes == HINT_STAGE) {
+            if (currentMistakes == Constants.HINT_STAGE) {
                 writer.println("Подсказка: " + hiddenWord.getHint());
             }
 
@@ -127,7 +117,7 @@ public class HangmanGame {
             if (guessedLetter <= 'е') {
                 currentAlphabet[guessedLetter - 'а'].setUsed(true);
             } else if (guessedLetter == 'ё') {
-                currentAlphabet[YO_INDEX].setUsed(true);
+                currentAlphabet[Constants.YO_INDEX].setUsed(true);
             } else {
                 currentAlphabet[guessedLetter - 'а' + 1].setUsed(true);
             }
@@ -143,7 +133,7 @@ public class HangmanGame {
             writer.println(currentHiddenWord);
             writer.println("Поздравляем, вы полностью отгадали слово!");
         } else {
-            writer.println(HangmanStageVisualization.STAGES[ALLOWED_MISTAKES]);
+            writer.println(HangmanStageVisualization.STAGES[Constants.ALLOWED_MISTAKES]);
             writer.println("К сожалению, вы не отгадали слово");
         }
     }
@@ -169,51 +159,40 @@ public class HangmanGame {
         }
     }
 
-    private static final int RANDOM_CATEGORY_BOUND = 5;
-    private static final int FRUITS_CASE = 1;
-    private static final int ANIMALS_CASE = 2;
-    private static final int COUNTRIES_CASE = 3;
-    private static final int FOOD_CASE = 4;
-
     public String chooseCategory(String categoryInput) {
         String chosenCategory = "";
         if (categoryInput == null || categoryInput.isBlank()) {
             Random random = new Random();
-            int randomCategory = random.nextInt(1, RANDOM_CATEGORY_BOUND);
+            int randomCategory = random.nextInt(1, Constants.RANDOM_CATEGORY_BOUND);
             chosenCategory = switch (randomCategory) {
-                case FRUITS_CASE -> FRUITS;
-                case ANIMALS_CASE -> ANIMALS;
-                case COUNTRIES_CASE -> COUNTRIES;
-                case FOOD_CASE -> FOOD;
+                case Constants.FRUITS_CASE -> Constants.FRUITS;
+                case Constants.ANIMALS_CASE -> Constants.ANIMALS;
+                case Constants.COUNTRIES_CASE -> Constants.COUNTRIES;
+                case Constants.FOOD_CASE -> Constants.FOOD;
                 default -> " ";
             };
             return chosenCategory;
-        } else if (categoryInput.equalsIgnoreCase(FRUITS)
-            || categoryInput.equalsIgnoreCase(ANIMALS)
-            || categoryInput.equalsIgnoreCase(COUNTRIES)
-            || categoryInput.equalsIgnoreCase(FOOD)) {
+        } else if (categoryInput.equalsIgnoreCase(Constants.FRUITS)
+            || categoryInput.equalsIgnoreCase(Constants.ANIMALS)
+            || categoryInput.equalsIgnoreCase(Constants.COUNTRIES)
+            || categoryInput.equalsIgnoreCase(Constants.FOOD)) {
             return categoryInput;
         } else {
             return " ";
         }
     }
 
-    private static final int DIFFICULTY_BOUND = 4;
-    private static final int EASY_DIFFICULTY = 1;
-    private static final int MEDIUM_DIFFICULTY = 2;
-    private static final int HARD_DIFFICULTY = 3;
-
     public int chooseDifficulty(String difficultyInput) {
         int chosenDufficulty = 0;
         if (difficultyInput == null || difficultyInput.isBlank()) {
             Random random = new Random();
-            return random.nextInt(1, DIFFICULTY_BOUND);
+            return random.nextInt(1, Constants.DIFFICULTY_BOUND);
         } else if (difficultyInput.equalsIgnoreCase("Легкая")) {
-            chosenDufficulty = EASY_DIFFICULTY;
+            chosenDufficulty = Constants.EASY_DIFFICULTY;
         } else if (difficultyInput.equalsIgnoreCase("Средняя")) {
-            chosenDufficulty = MEDIUM_DIFFICULTY;
+            chosenDufficulty = Constants.MEDIUM_DIFFICULTY;
         } else if (difficultyInput.equalsIgnoreCase("Сложная")) {
-            chosenDufficulty = HARD_DIFFICULTY;
+            chosenDufficulty = Constants.HARD_DIFFICULTY;
         }
         return chosenDufficulty;
     }
